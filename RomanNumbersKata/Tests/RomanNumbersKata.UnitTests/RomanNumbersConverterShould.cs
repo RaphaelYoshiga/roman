@@ -11,7 +11,7 @@ namespace RomanNumbersKata.UnitTests
         [TestCase(1, "I")]
         [TestCase(2, "II")]
         [TestCase(3, "III")]
-        public void ReturnI_WhenConverting_GivenInputIs1(int number, string expectedRoman)
+        public void ReturnRoman_WhenConverting_GivenInputIsArabic(int number, string expectedRoman)
         {
             var roman = RomanNumbersConverter.Convert(number);
 
