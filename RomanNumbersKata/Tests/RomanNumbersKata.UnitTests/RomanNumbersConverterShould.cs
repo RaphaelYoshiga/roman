@@ -1,6 +1,8 @@
 ﻿
 namespace RomanNumbersKata.UnitTests
 {
+    using System.Collections.Generic;
+
     using FluentAssertions;
 
     using NUnit.Framework;
@@ -21,6 +23,8 @@ namespace RomanNumbersKata.UnitTests
         [TestCase(4, "IV")]
         [TestCase(5, "V")]
         [TestCase(6, "VI")]
+        [TestCase(7, "VII")]
+        [TestCase(8, "VIII")]
         public void ReturnRoman_WhenConverting_GivenInputIsGreaterThanThree(int number, string expectedRoman)
         {
             var roman = RomanNumbersConverter.Convert(number);
@@ -33,26 +37,29 @@ namespace RomanNumbersKata.UnitTests
     {
         public static string Convert(int number)
         {
+            var numbersToRoman = new Dictionary<int, string>
+                                     {
+                                         {1, "I"},
+                                         {5, "V"},
+                                     };
+            if (number == 0)
+            {
+                return string.Empty;
+            }
+            if (number < 4)
+            {
+                return numbersToRoman[1] + Convert(number - 1);
+            }
             if (number == 4)
             {
-                return "IV";
+                return numbersToRoman[1] + numbersToRoman[5];
             }
-
-            if (number == 5)
+            if (number < 9)
             {
-                return "V";
+                return numbersToRoman[5] + Convert(number - 5);
             }
 
-            if (number == 6)
-            {
-                return "VI";
-            }
-
-            var index = number - 1;
-
-            var romanNumbers = new[] { "I", "II", "III" };
-
-            return romanNumbers[index];
+            return "";
         }
 
     }
