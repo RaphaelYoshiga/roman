@@ -10,24 +10,25 @@ namespace RomanNumbersKata.UnitTests
     {
         [TestCase(1, "I")]
         [TestCase(2, "II")]
+        [TestCase(3, "III")]
         public void ReturnI_WhenConverting_GivenInputIs1(int number, string expectedRoman)
         {
             var roman = RomanNumbersConverter.Convert(number);
 
             roman.Should().Be(expectedRoman);
-        }        
+        }
     }
 
     public class RomanNumbersConverter
     {
         public static string Convert(int number)
         {
-            if (number == 2)
-            {
-                return "II";
-            }
+            var index = number - 1;
 
-            return "I";
+            var romanNumbers = new[] { "I", "II", "III" };
+
+            return romanNumbers[index];
         }
+
     }
 }
