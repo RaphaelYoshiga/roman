@@ -6,6 +6,7 @@ namespace RomanNumbersKata.UnitTests
     using FluentAssertions;
 
     using NUnit.Framework;
+    using System.Linq;
 
     [TestFixture]
     public class RomanNumbersConverterShould
@@ -46,6 +47,7 @@ namespace RomanNumbersKata.UnitTests
         }
 
         [TestCase(40, ExpectedResult = "XL")]
+        [TestCase(41, ExpectedResult = "XLI")]
         [TestCase(50, ExpectedResult = "L")]
         [TestCase(60, ExpectedResult = "LX")]
         public string ReturnRoman_WhenConverting_GivenInputIsGreaterThanThirtyNine(int number)
@@ -68,25 +70,31 @@ namespace RomanNumbersKata.UnitTests
         {
             if (number == 0)
                 return string.Empty;
-            if (number < 4)
-                return BiggestIndexPlusTheRest(1, number);
 
             if (number == 4)
                 return numbersToRoman[1] + numbersToRoman[5];
 
-            if (number < 9)
-                return BiggestIndexPlusTheRest(5, number);
-
-            if (number == 9)
+            if (number == 5 + 4)
                 return numbersToRoman[1] + numbersToRoman[10];
-
-            if (number < 39)
-                return BiggestIndexPlusTheRest(10, number);
 
             if (number == 40)
                 return "XL";
 
-            return BiggestIndexPlusTheRest(50, number);
+            if (number > 39 && number < 49)
+                return "XL" + Convert(number - 40);
+
+            return BiggestIndexPlusTheRest(GetDenominator(number), number);
+        }
+
+        private static int GetDenominator(int number)
+        {
+            var orderedKeys = numbersToRoman.OrderBy(p => p.Key).Select(p => p.Key).ToArray();
+            foreach (var key in orderedKeys)
+            {
+                if (number < key * 4 && !orderedKeys.Any(p => p > key && p <= number))
+                    return key;
+            }
+            return 0;
         }
 
         private static string BiggestIndexPlusTheRest(int biggestIndex, int number)
