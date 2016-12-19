@@ -38,7 +38,17 @@ namespace RomanNumbersKata.UnitTests
         [TestCase(12, ExpectedResult = "XII")]
         [TestCase(13, ExpectedResult = "XIII")]
         [TestCase(14, ExpectedResult = "XIV")]
+        [TestCase(20, ExpectedResult = "XX")]
+        [TestCase(30, ExpectedResult = "XXX")]
         public string ReturnRoman_WhenConverting_GivenInputIsGreaterThanEight(int number)
+        {
+            return RomanNumbersConverter.Convert(number);
+        }
+
+        [TestCase(40, ExpectedResult = "XL")]
+        [TestCase(50, ExpectedResult = "L")]
+        [TestCase(60, ExpectedResult = "LX")]
+        public string ReturnRoman_WhenConverting_GivenInputIsGreaterThanThirtyNine(int number)
         {
             return RomanNumbersConverter.Convert(number);
         }
@@ -48,9 +58,10 @@ namespace RomanNumbersKata.UnitTests
     {
         private static Dictionary<int, string> numbersToRoman = new Dictionary<int, string>
                                      {
-                                         {1, "I"},
-                                         {5, "V"},
-                                         {10, "X" }
+                                         { 1, "I"},
+                                         { 5, "V"},
+                                         { 10, "X" },
+                                         { 50, "L"}
                                      };
 
         public static string Convert(int number)
@@ -67,9 +78,15 @@ namespace RomanNumbersKata.UnitTests
                 return BiggestIndexPlusTheRest(5, number);
 
             if (number == 9)
-                return numbersToRoman[1] + numbersToRoman[10]
-;
-            return BiggestIndexPlusTheRest(10, number);
+                return numbersToRoman[1] + numbersToRoman[10];
+
+            if (number < 39)
+                return BiggestIndexPlusTheRest(10, number);
+
+            if (number == 40)
+                return "XL";
+
+            return BiggestIndexPlusTheRest(50, number);
         }
 
         private static string BiggestIndexPlusTheRest(int biggestIndex, int number)
