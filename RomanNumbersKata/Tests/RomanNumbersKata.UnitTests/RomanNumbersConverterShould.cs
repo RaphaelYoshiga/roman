@@ -31,36 +31,50 @@ namespace RomanNumbersKata.UnitTests
 
             roman.Should().Be(expectedRoman);
         }
+
+        [TestCase(9, ExpectedResult = "IX")]
+        [TestCase(10, ExpectedResult = "X")]
+        [TestCase(11, ExpectedResult = "XI")]
+        [TestCase(12, ExpectedResult = "XII")]
+        [TestCase(13, ExpectedResult = "XIII")]
+        [TestCase(14, ExpectedResult = "XIV")]
+        public string ReturnRoman_WhenConverting_GivenInputIsGreaterThanEight(int number)
+        {
+            return RomanNumbersConverter.Convert(number);
+        }
     }
 
     public class RomanNumbersConverter
     {
-        public static string Convert(int number)
-        {
-            var numbersToRoman = new Dictionary<int, string>
+        private static Dictionary<int, string> numbersToRoman = new Dictionary<int, string>
                                      {
                                          {1, "I"},
                                          {5, "V"},
+                                         {10, "X" }
                                      };
-            if (number == 0)
-            {
-                return string.Empty;
-            }
-            if (number < 4)
-            {
-                return numbersToRoman[1] + Convert(number - 1);
-            }
-            if (number == 4)
-            {
-                return numbersToRoman[1] + numbersToRoman[5];
-            }
-            if (number < 9)
-            {
-                return numbersToRoman[5] + Convert(number - 5);
-            }
 
-            return "";
+        public static string Convert(int number)
+        {
+            if (number == 0)
+                return string.Empty;
+            if (number < 4)
+                return BiggestIndexPlusTheRest(1, number);
+
+            if (number == 4)
+                return numbersToRoman[1] + numbersToRoman[5];
+
+            if (number < 9)
+                return BiggestIndexPlusTheRest(5, number);
+
+            if (number == 9)
+                return numbersToRoman[1] + numbersToRoman[10]
+;
+            return BiggestIndexPlusTheRest(10, number);
         }
 
+        private static string BiggestIndexPlusTheRest(int biggestIndex, int number)
+        {
+            return numbersToRoman[biggestIndex] + Convert(number - biggestIndex);
+        }
     }
 }
