@@ -1,13 +1,9 @@
-﻿
+﻿using System.Security.Cryptography.X509Certificates;
+using FluentAssertions;
+using NUnit.Framework;
+
 namespace RomanNumbersKata.UnitTests
 {
-    using System.Collections.Generic;
-
-    using FluentAssertions;
-
-    using NUnit.Framework;
-    using System.Linq;
-
     [TestFixture]
     public class RomanNumbersConverterShould
     {
@@ -50,56 +46,42 @@ namespace RomanNumbersKata.UnitTests
         [TestCase(41, ExpectedResult = "XLI")]
         [TestCase(50, ExpectedResult = "L")]
         [TestCase(60, ExpectedResult = "LX")]
+        [TestCase(80, ExpectedResult = "LXXX")]
         public string ReturnRoman_WhenConverting_GivenInputIsGreaterThanThirtyNine(int number)
         {
             return RomanNumbersConverter.Convert(number);
         }
-    }
 
-    public class RomanNumbersConverter
-    {
-        private static Dictionary<int, string> numbersToRoman = new Dictionary<int, string>
-                                     {
-                                         { 1, "I"},
-                                         { 5, "V"},
-                                         { 10, "X" },
-                                         { 50, "L"}
-                                     };
-
-        public static string Convert(int number)
+        [TestCase(90, ExpectedResult = "XC")]
+        [TestCase(99, ExpectedResult = "XCIX")]
+        [TestCase(100, ExpectedResult = "C")]
+        [TestCase(130, ExpectedResult = "CXXX")]
+        public string ReturnRoman_WhenConverting_GivenInputIsGreaterThanNinety(int number)
         {
-            if (number == 0)
-                return string.Empty;
-
-            if (number == 4)
-                return numbersToRoman[1] + numbersToRoman[5];
-
-            if (number == 5 + 4)
-                return numbersToRoman[1] + numbersToRoman[10];
-
-            if (number == 40)
-                return "XL";
-
-            if (number > 39 && number < 49)
-                return "XL" + Convert(number - 40);
-
-            return BiggestIndexPlusTheRest(GetDenominator(number), number);
+            return RomanNumbersConverter.Convert(number);
         }
 
-        private static int GetDenominator(int number)
+        [TestCase(400, ExpectedResult = "CD")]
+        [TestCase(800, ExpectedResult = "DCCC")]
+        public string ReturnRoman_WhenConverting_GivenInputIsGreaterThanFourHundred(int number)
         {
-            var orderedKeys = numbersToRoman.OrderBy(p => p.Key).Select(p => p.Key).ToArray();
-            foreach (var key in orderedKeys)
-            {
-                if (number < key * 4 && !orderedKeys.Any(p => p > key && p <= number))
-                    return key;
-            }
-            return 0;
+            return RomanNumbersConverter.Convert(number);
         }
 
-        private static string BiggestIndexPlusTheRest(int biggestIndex, int number)
+        [TestCase(900, ExpectedResult = "CM")]
+        [TestCase(1000, ExpectedResult = "M")]
+        [TestCase(1300, ExpectedResult = "MCCC")]
+        public string ReturnRoman_WhenConverting_GivenInputIsGreaterThanNineHundred(int number)
         {
-            return numbersToRoman[biggestIndex] + Convert(number - biggestIndex);
+            return RomanNumbersConverter.Convert(number);
+        }
+
+        [TestCase(846, ExpectedResult = "DCCCXLVI")]
+        [TestCase(1999, ExpectedResult = "MCMXCIX")]
+        [TestCase(2008, ExpectedResult = "MMVIII")]
+        public string ReturnRoman_WhenConverting_TestResults(int number)
+        {
+            return RomanNumbersConverter.Convert(number);
         }
     }
 }
