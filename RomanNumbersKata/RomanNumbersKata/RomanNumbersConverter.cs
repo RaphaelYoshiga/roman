@@ -33,10 +33,10 @@ namespace RomanNumbersKata
 
         private static int GetDenominator(int number)
         {
-            var orderedKeys = numbersToRoman.OrderBy(p => p.Key).Select(p => p.Key).ToArray();
+            var orderedKeys = numbersToRoman.OrderByDescending(p => p.Key).Select(p => p.Key).ToArray();
             foreach (var key in orderedKeys)
             {
-                if (number < key * 4 && !orderedKeys.Any(p => p > key && p <= number))
+                if (number >= key)
                     return key;
             }
             return 0;
